@@ -1,7 +1,5 @@
-import 'package:app_devfest_batna/responsive/desktop_layout.dart';
-import 'package:app_devfest_batna/responsive/mobile_body.dart';
-import 'package:app_devfest_batna/responsive/responsive_layout.dart';
-import 'package:app_devfest_batna/responsive/tablet_body.dart';
+import 'package:app_devfest_batna/home.dart';
+import 'package:app_devfest_batna/user%20landing%20page/landin_page_user.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,12 +12,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ResponsiveLayout(
-        mobileBody: const MobileScaffold(),
-        tabletBody: const TabletScaffold(),
-        desktopBody: const DesktopScaffold(),
-      ),
-    );
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false, home: LandinPageUser());
   }
 }
