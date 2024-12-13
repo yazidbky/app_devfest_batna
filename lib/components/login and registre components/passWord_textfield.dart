@@ -11,7 +11,8 @@ class CustomTextFieldPassword extends StatelessWidget {
       required this.passwordController,
       required this.text,
       required this.hintText,
-      required this.obscureText});
+      required this.obscureText,
+      String? errorText});
 
   @override
   Widget build(BuildContext context) {

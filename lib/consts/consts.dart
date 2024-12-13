@@ -1,2 +1,1 @@
-const String baseUrl =
-    'https://growthcore-backend.onrender.com/api/auth/registre';
+const String baseUrl = 'https://growthcore-backend.onrender.com';
