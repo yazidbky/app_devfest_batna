@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UploadCard extends StatelessWidget {
-  final String title, subtitle, drgaFile, fileName, fileSize;
+  final String title, subtitle, dragFile, fileName, fileSize;
+  final void Function()? onTap;
   const UploadCard(
       {super.key,
       required this.title,
       required this.subtitle,
-      required this.drgaFile,
+      required this.dragFile,
       required this.fileName,
-      required this.fileSize});
+      required this.fileSize,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +58,21 @@ class UploadCard extends StatelessWidget {
                   child: CustomPaint(
                     painter: DashedBorderPainter(),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: onTap,
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.cloud_upload_outlined,
-                              color: Colors.blue,
-                            ),
-                            Text(drgaFile),
-                          ],
-                        )),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.cloud_upload_outlined,
+                                color: Colors.blue,
+                              ),
+                              Text(dragFile),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -78,23 +81,24 @@ class UploadCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Only support .jpg, .png and .svg and zip files',
+                  'Only support .csv files',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w300),
                 ),
               ),
-              ListTile(
-                leading: const Icon(Icons.picture_as_pdf),
-                title: Text(
-                  fileName,
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              // Show ListTile only when a file is selected
+              if (fileName != 'No file selected') ...[
+                ListTile(
+                  leading: const Icon(Icons.picture_as_pdf),
+                  title: Text(
+                    fileName,
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    fileSize,
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w300),
+                  ),
                 ),
-                subtitle: Text(fileSize,
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w300)),
-              ),
-              const LinearProgressIndicator(
-                value: 1,
-                color: Color(0xFF394496),
-              )
+              ],
             ],
           ),
         ),

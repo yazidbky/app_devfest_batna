@@ -101,7 +101,13 @@ class _WebSidebarState extends State<WebSidebar> {
   Widget _getContentForSelectedItem(String selectedItem) {
     switch (selectedItem) {
       case 'Quick Access':
-        return const QuickAccess();
+        return QuickAccess(
+          onNavigate: (menuItem) {
+            setState(() {
+              selectedMenuItem = menuItem; // Update the sidebar's menu item
+            });
+          },
+        );
       case 'Dashboard':
         return const DashboardScreen();
       case 'Sales Forecasting':

@@ -1,6 +1,7 @@
 import 'package:app_devfest_batna/components/custom_button.dart';
 import 'package:app_devfest_batna/components/landing_page_appbar.dart/app_bar_landingpage.dart';
 import 'package:app_devfest_batna/components/main_color.dart';
+import 'package:app_devfest_batna/startUp%20ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -54,7 +55,13 @@ class _LandinPageUserState extends State<LandinPageUser> {
               CustomButton(
                 text: 'Get Started',
                 borderColor: mainColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Home(),
+                      ));
+                },
                 color: mainColor,
                 size: 0.1,
                 textColor: Colors.white,
