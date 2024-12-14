@@ -3,6 +3,7 @@ import 'package:app_devfest_batna/startUp%20ui/DashboardScreen.dart';
 import 'package:app_devfest_batna/startUp%20ui/RecommendationScreen.dart';
 import 'package:app_devfest_batna/startUp%20ui/SalesForecastingScreen.dart';
 import 'package:app_devfest_batna/startUp%20ui/SalesInvestorScreen.dart';
+import 'package:app_devfest_batna/startUp%20ui/companies.dart';
 import 'package:app_devfest_batna/startUp%20ui/quick_access.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -117,6 +118,8 @@ class _WebSidebarState extends State<WebSidebar> {
         return const SalesInvestorScreen();
       case 'Recommendation':
         return const RecommendationScreen();
+      case 'Companies':
+        return const CompaniesScreen();
       case 'Settings':
         return _buildPlaceholder('Adjust your settings here');
       case 'FAQ':

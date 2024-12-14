@@ -3,6 +3,7 @@ import 'package:app_devfest_batna/components/login%20and%20registre%20components
 import 'package:app_devfest_batna/components/login%20and%20registre%20components/text_field.dart';
 import 'package:app_devfest_batna/cubit/login%20cubit/login_cubit.dart';
 import 'package:app_devfest_batna/cubit/login%20cubit/login_state.dart';
+import 'package:app_devfest_batna/registre%20and%20login/login_investor.dart';
 import 'package:app_devfest_batna/registre%20and%20login/registre.dart';
 import 'package:app_devfest_batna/user%20landing%20page/landin_page_user.dart';
 import 'package:flutter/material.dart';
@@ -59,14 +60,14 @@ class LoginPage extends StatelessWidget {
                         BlocConsumer<LoginCubit, LoginState>(
                           listener: (context, state) {
                             if (state is LoginSuccess) {
-                              // Navigate to the next screen
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LandinPageUser(),
+                                    builder: (context) => LandinPageUser(
+                                      userRole: 'user',
+                                    ),
                                   ));
                             } else if (state is LoginFailure) {
-                              // Show the error message
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(state.error)),
                               );
@@ -84,9 +85,6 @@ class LoginPage extends StatelessWidget {
                                             emailcontroller.text,
                                             passwordcontroller.text,
                                           );
-                                      print("Email: ${emailcontroller.text}");
-                                      print(
-                                          "Password: ${passwordcontroller.text}");
                                     },
                               color: Colors.blue,
                               textColor: Colors.white,
@@ -112,6 +110,16 @@ class LoginPage extends StatelessWidget {
                             ],
                           ),
                         ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPageForInvestor(),
+                                ));
+                          },
+                          child: const Text('Login as Investor'),
+                        ), // Navigation button
                       ],
                     ),
                   ),

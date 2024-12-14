@@ -63,7 +63,9 @@ class LoginPageForInvestor extends StatelessWidget {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LandinPageUser(),
+                                    builder: (context) => LandinPageUser(
+                                      userRole: 'investor',
+                                    ),
                                   ));
                             } else if (state is LoginFailure) {
                               // Show the error message

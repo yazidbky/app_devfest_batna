@@ -2,12 +2,15 @@ import 'package:app_devfest_batna/components/custom_button.dart';
 import 'package:app_devfest_batna/components/landing_page_appbar.dart/app_bar_landingpage.dart';
 import 'package:app_devfest_batna/components/main_color.dart';
 import 'package:app_devfest_batna/registre%20and%20login/login_investor.dart';
+import 'package:app_devfest_batna/startUp%20ui/companies.dart';
 import 'package:app_devfest_batna/startUp%20ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LandinPageUser extends StatefulWidget {
-  const LandinPageUser({super.key});
+  final String userRole; // Add a parameter for user role
+
+  const LandinPageUser({super.key, required this.userRole});
 
   @override
   State<LandinPageUser> createState() => _LandinPageUserState();
@@ -57,29 +60,26 @@ class _LandinPageUserState extends State<LandinPageUser> {
                 text: 'Get Started',
                 borderColor: mainColor,
                 onPressed: () {
-                  Navigator.push(
+                  // Navigate based on user role
+                  if (widget.userRole == 'user') {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const Home(),
-                      ));
+                      ),
+                    );
+                  } else if (widget.userRole == 'investor') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CompaniesScreen(),
+                      ),
+                    );
+                  }
                 },
                 color: mainColor,
                 size: 0.1,
                 textColor: Colors.white,
-              ),
-              CustomButton(
-                text: 'For Investor',
-                borderColor: mainColor,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPageForInvestor(),
-                      ));
-                },
-                color: Colors.white,
-                size: 0.1,
-                textColor: mainColor,
               ),
             ],
           ),

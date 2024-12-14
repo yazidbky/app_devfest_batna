@@ -1,5 +1,7 @@
 import 'package:app_devfest_batna/components/custom_button.dart';
 import 'package:app_devfest_batna/components/main_color.dart';
+import 'package:app_devfest_batna/registre%20and%20login/login_investor.dart';
+import 'package:app_devfest_batna/registre%20and%20login/registre.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,12 +42,32 @@ class FrontDesign extends StatelessWidget {
           CustomButton(
             text: 'Get Started',
             borderColor: mainColor,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Registre(),
+                  ));
+            },
             color: mainColor,
             size: 0.1,
             textColor: Colors.white,
             height: 60,
-          )
+          ),
+          CustomButton(
+            text: 'For Investor',
+            borderColor: mainColor,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPageForInvestor(),
+                  ));
+            },
+            color: Colors.white,
+            size: 0.1,
+            textColor: mainColor,
+          ),
         ],
       ),
     );

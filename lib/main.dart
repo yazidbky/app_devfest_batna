@@ -6,6 +6,7 @@ import 'package:app_devfest_batna/cubit/histogram%20cubit/histogram_cubit.dart';
 import 'package:app_devfest_batna/cubit/login%20cubit/login_cubit.dart';
 import 'package:app_devfest_batna/cubit/registre%20cubit/registre_cubit.dart';
 import 'package:app_devfest_batna/cubit/uplaod%20csv%20cubit/uplaod_csv_cubit.dart';
+import 'package:app_devfest_batna/home.dart';
 import 'package:app_devfest_batna/registre%20and%20login/login.dart';
 import 'package:app_devfest_batna/startUp%20ui/home.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: HomePage(),
       ),
     );
   }

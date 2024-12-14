@@ -14,7 +14,7 @@ class _SalesInvestorScreenState extends State<CompaniesScreen> {
     (index) => {
       'name': 'Yasser Ben Sghir',
       'email': 'yaser.ben@yahoo.com',
-      'image': 'images/image.png', // Replace with local image path
+      'image': 'images/Image.png', // Replace with local image path
     },
   );
 
