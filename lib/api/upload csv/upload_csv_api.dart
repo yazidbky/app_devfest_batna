@@ -1,7 +1,9 @@
+import 'dart:convert'; // Import for JSON decoding
 import 'dart:html';
-import 'package:app_devfest_batna/get%20token/get_token.dart';
+import 'package:app_devfest_batna/api/histogram%20api/histogram_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_devfest_batna/consts/consts.dart';
+import 'package:app_devfest_batna/get%20token/get_token.dart';
 
 class FileUploadApiService {
   static const String uploadCsvEndpoint = '/api/upload/upload-csv';
@@ -12,7 +14,8 @@ class FileUploadApiService {
     required File csvFile,
   }) async {
     try {
-      // Retrieve token from SharedPreferences
+      final SalesHistogramApiService _apiService = SalesHistogramApiService();
+
       String? token = await getToken();
 
       if (token == null) {
@@ -24,45 +27,35 @@ class FileUploadApiService {
 
       final url = Uri.parse('$baseUrl$uploadCsvEndpoint');
 
-      // Create a multipart request
       var request = http.MultipartRequest('POST', url)
-        ..headers['Authorization'] = 'Bearer $token' // Add token to headers
+        ..headers['Authorization'] = 'Bearer $token'
         ..headers['Content-Type'] = 'multipart/form-data'
         ..files.add(http.MultipartFile.fromBytes(
-          'csvFile', // The key expected by the server for the file
-          csvFileBytes, // Send the byte array directly
-          filename: fileName, // Include the filename
+          'csvFile',
+          csvFileBytes,
+          filename: fileName,
         ));
 
-      // Send the request
       final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
 
-      // Process the response
-      // final responseBody = await response.stream.bytesToString();
+      print('Response Body uplaod : $responseBody');
 
       if (response.statusCode == 201) {
-        // CSV uploaded successfully
+        final fileId =
+            json.decode(responseBody)['fileId']; // Extract fileId from response
+        print('File ID: $fileId'); // Log the fileId
+        await _apiService.fetchSalesHistogram(fileId: fileId);
+
         return {
           "success": true,
+          "fileId": fileId,
           "message": "CSV file uploaded successfully",
         };
-      } else if (response.statusCode == 400) {
-        // No file uploaded
-        return {
-          "success": false,
-          "error": "No file uploaded",
-        };
-      } else if (response.statusCode == 500) {
-        // Server error
-        return {
-          "success": false,
-          "error": "Server error, please try again later.",
-        };
       } else {
-        // Handle unexpected status codes
         return {
           "success": false,
-          "error": "An unexpected error occurred.",
+          "error": "Failed to upload CSV file",
         };
       }
     } catch (e) {

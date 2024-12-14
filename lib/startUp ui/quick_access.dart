@@ -152,6 +152,7 @@ class _QuickAccessState extends State<QuickAccess> {
                           context.read<FileUploadCubit>().uploadCsvFile(
                                 selectedFile!,
                                 selectedFileName!,
+                                context, // Pass the context here
                               );
                         }
                       : () {
@@ -162,7 +163,7 @@ class _QuickAccessState extends State<QuickAccess> {
                   textColor: Colors.white,
                   size: 0.4,
                 ),
-              ),
+              )
             ],
           ),
           // Overlay with blur and progress bar

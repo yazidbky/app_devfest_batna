@@ -8,6 +8,7 @@ class FileUploadLoading extends FileUploadState {
 
 class FileUploadSuccess extends FileUploadState {
   final String message;
+
   FileUploadSuccess(this.message);
 }
 

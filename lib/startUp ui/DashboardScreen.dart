@@ -1,254 +1,233 @@
-import 'package:app_devfest_batna/components/main_color.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:app_devfest_batna/api/histogram%20api/histogram_api.dart';
+import 'package:app_devfest_batna/cubit/histogram%20cubit/histogram_cubit.dart';
+import 'package:app_devfest_batna/cubit/histogram%20cubit/histogram_state.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
+class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Dashboard',
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+    return BlocProvider(
+      create: (context) => DashboardCubit(
+          salesHistogramApiService: SalesHistogramApiService(),
+          SalesHistogramApiService())
+        ..fetchData(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Dashboard',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {},
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {
-              // Handle notifications
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Handle search
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0), // Overall padding for the screen
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Dashboard Overview',
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-            const SizedBox(height: 20), // Spacing
+        body: BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            if (state is DashboardLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is DashboardLoaded) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Dashboard Overview',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
 
-            // Row of Data Containers
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                    child: DataContainer(
-                        title: 'Total Users',
-                        content: '40,000',
-                        raise: '8.5% up from yesterday',
-                        icon: Icons.people)),
-                const SizedBox(width: 10), // Spacing between containers
-                Expanded(
-                    child: DataContainer(
-                        title: 'Total Orders',
-                        content: '10,000',
-                        raise: '5.3% up from yesterday',
-                        icon: Icons.shopping_cart)),
-                const SizedBox(width: 10), // Spacing between containers
-                Expanded(
-                    child: DataContainer(
-                        title: 'Total Sales',
-                        content: '\$89,000',
-                        raise: '12.0% up from yesterday',
-                        icon: Icons.attach_money)),
-              ],
-            ),
-            const SizedBox(height: 30), // Spacing before graph
+                    // Data Containers
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: DataContainer(
+                            title: 'Total Users',
+                            content: '1.5K',
+                            raise: '8.5% up from yesterday',
+                            icon: Icons.people,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DataContainer(
+                            title: 'Total Orders',
+                            content: '250',
+                            raise: '5.3% up from yesterday',
+                            icon: Icons.shopping_cart,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DataContainer(
+                            title: 'Total Sales',
+                            content: '\$12K',
+                            raise: '12.0% up from yesterday',
+                            icon: Icons.attach_money,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
 
-            // Graph Section
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black12,
-                        spreadRadius: 1,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4)),
+                    // Graphs
+                    Expanded(
+                      child: BarChartSample(categorySales: state.categorySales),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: PieChartSample(genderSales: state.genderSales),
+                    ),
                   ],
                 ),
-                padding: const EdgeInsets.all(16),
-                child: LineChartSample(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Custom Widget for Data Container with improved design
-  Widget DataContainer(
-      {required String title,
-      required String content,
-      required String raise,
-      required IconData icon}) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Rounded corners
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 28, color: mainColor),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                      fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10), // Spacing
-            Text(
-              content,
-              style: GoogleFonts.poppins(
-                  fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 5), // Spacing
-            Text(
-              raise,
-              style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey),
-            ),
-          ],
+              );
+            } else if (state is DashboardError) {
+              return Center(child: Text(state.message));
+            } else {
+              return Center(child: Text('Unexpected state'));
+            }
+          },
         ),
       ),
     );
   }
 }
 
-// Line Chart Widget
-class LineChartSample extends StatelessWidget {
+class DataContainer extends StatelessWidget {
+  final String title;
+  final String content;
+  final String raise;
+  final IconData icon;
+
+  const DataContainer({
+    required this.title,
+    required this.content,
+    required this.raise,
+    required this.icon,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return LineChart(
-      LineChartData(
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(
-              color: Colors.grey.shade300,
-              strokeWidth: 1,
-            );
-          },
-        ),
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 40,
-              getTitlesWidget: (value, meta) {
-                return Text('${value.toInt()}%',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ));
-              },
-            ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                const months = [
-                  "jan",
-                  "feb",
-                  "mar",
-                  "apr",
-                  "mai",
-                  "jun",
-                  "jul",
-                  "aou",
-                  "sep",
-                  "oct",
-                  "nov",
-                  "dec"
-                ];
-                return Text(
-                  months[value.toInt()],
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        minX: 0,
-        maxX: 11,
-        minY: 0,
-        maxY: 100,
-        lineBarsData: [
-          LineChartBarData(
-            spots: [
-              FlSpot(0, 20),
-              FlSpot(1, 50),
-              FlSpot(2, 40),
-              FlSpot(3, 80),
-              FlSpot(4, 70),
-              FlSpot(5, 60),
-              FlSpot(6, 90),
-              FlSpot(7, 70),
-              FlSpot(8, 50),
-              FlSpot(9, 60),
-              FlSpot(10, 40),
-              FlSpot(11, 50),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 24, color: Colors.blue),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
             ],
-            isCurved: true,
-            color: Colors.blue,
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 4,
-                  color: Colors.blue,
-                  strokeColor: Colors.white,
-                  strokeWidth: 2,
-                );
-              },
+          ),
+          const SizedBox(height: 8),
+          Text(
+            content,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Colors.black87,
             ),
-            belowBarData: BarAreaData(
-              show: true,
-              color: Colors.blue.withOpacity(0.2),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            raise,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Colors.green,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BarChartSample extends StatelessWidget {
+  final List<dynamic> categorySales;
+
+  const BarChartSample({required this.categorySales});
+
+  @override
+  Widget build(BuildContext context) {
+    return BarChart(
+      BarChartData(
+        barGroups: categorySales.map((item) {
+          final category = item['category'] ?? 'Unknown';
+          final totalSales = item['total_sales'] ?? 0;
+
+          return BarChartGroupData(
+            x: categorySales.indexOf(item),
+            barRods: [
+              BarChartRodData(
+                toY: totalSales.toDouble(),
+                color: Colors.blue,
+                width: 16,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class PieChartSample extends StatelessWidget {
+  final List<dynamic> genderSales;
+
+  const PieChartSample({required this.genderSales});
+
+  @override
+  Widget build(BuildContext context) {
+    return PieChart(
+      PieChartData(
+        sections: genderSales.map((item) {
+          final gender = item['gender'] ?? 'Unknown';
+          final totalSales = item['total_sales'] ?? 0;
+
+          return PieChartSectionData(
+            title: gender,
+            value: totalSales.toDouble(),
+            color: gender == 'Male' ? Colors.blue : Colors.pink,
+          );
+        }).toList(),
       ),
     );
   }

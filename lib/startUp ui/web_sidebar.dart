@@ -47,6 +47,7 @@ class _WebSidebarState extends State<WebSidebar> {
                       _buildMenuItem(Icons.person, 'Sales Forecasting'),
                       _buildMenuItem(Icons.settings, 'Sales Investor'),
                       _buildMenuItem(Icons.recommend, 'Recommendation'),
+                      _buildMenuItem(Icons.recommend, 'Companies'),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
@@ -109,7 +110,7 @@ class _WebSidebarState extends State<WebSidebar> {
           },
         );
       case 'Dashboard':
-        return const DashboardScreen();
+        return DashboardScreen();
       case 'Sales Forecasting':
         return const SalesForecastingScreen();
       case 'Sales Investor':
